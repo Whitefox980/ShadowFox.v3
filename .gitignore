@@ -1,0 +1,33 @@
+  GNU nano 8.4                                            .gitignore
+# OS / Editor junk
+__pycache__/
+*.pyc
+*.swp
+.DS_Store
+
+# AI & log podaci
+logs/
+reports/
+agent_log.jsonl
+config.json
+
+# Konfiguracije
+.env
+*.secret
+*.key
+*.token
+
+# PDF i rezultati
+*.pdf
+*.md
+
+# Tokeni, backup i ključne datoteke
+*.bak
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Shadow strateški izlazi
+shadow_strategy_report.pdf
+

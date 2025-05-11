@@ -1,0 +1,3 @@
+http://example.com/search?q=test
+http://example.com/page.php?input=test
+http://testsite.local/?query=test

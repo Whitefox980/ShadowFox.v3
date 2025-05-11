@@ -1,0 +1,767 @@
+[
+  {
+    "timestamp": "2025-05-11 00:13:21",
+    "target": "http://example.com",
+    "tool": "sqlmap_auto",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em SQL Injection test...\n[+] Testiram: http://example.com | High | Admin login page?id=\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id= (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x726a3c6f90>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=' OR 1=1 --\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id='%20OR%201=1%20-- (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x726a3c72f0>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=\" OR \"1\"=\"1\n[-] Gre\u0161ka: HTTPConnect"
+  },
+  {
+    "timestamp": "2025-05-11 00:22:16",
+    "target": "http://example.com",
+    "tool": "xss_poc",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/xss_scanner.py\", line 45\n    log_to_sheet(__file__, rezultat) + f' | Severity: {{severity}}')\n                                                                   ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:25:08",
+    "target": "http://example.com",
+    "tool": "cmd_inject",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/command_injection.py\", line 31\n    log_to_sheet(__file__, \"\\n\".join(found)) + f' | Severity: {{severity}}')\n                                                                           ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:25:17",
+    "target": "http://example.com",
+    "tool": "lfi_test",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/index.php?page=home../../../../../../../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home/etc/passwd\n[-] LFI test zavr\u0161en, ni\u0161ta nije prona\u0111eno.\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:26:39",
+    "target": "http://example.com",
+    "tool": "idor_check",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/idor_tester.py\", line 32\n    log_to_sheet(__file__, f\"Mogu\u0107i IDOR: {test_url}\") + f' | Severity: {{severity}}')\n                                                                                     ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:27:43",
+    "target": "http://example.com",
+    "tool": "ssrf",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/ssrf_checker.py\", line 23\n    log_to_sheet(__file__, log) + f' | Severity: {{severity}}')\n                                                              ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:27:51",
+    "target": "http://example.com",
+    "tool": "subdomain_enum",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 00:28:56",
+    "target": "http://example.com",
+    "tool": "rce_scan",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/rce_scanner.py\", line 17\n    log_to_sheet(__file__, f\"RCE: {full_url}\") + f' | Severity: {{severity}}')\n                                                                             ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:29:49",
+    "target": "http://example.com",
+    "tool": "open_redirect",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/open_redirect.py\", line 22\n    log_to_sheet(__file__, f\"OPEN REDIRECT: {full_url} => {location}\") + f' | Severity: {{severity}}')\n                                                                                                     ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:30:18",
+    "target": "http://example.com",
+    "tool": "sqli_scanner",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/item?id=%27+OR+%271%27%3D%271\n[-] Nema o\u010digledne razlike.\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:31:06",
+    "target": "http://example.com",
+    "tool": "ssti",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/ssti_scanner.py\", line 21\n    log_to_sheet(__file__, log) + f' | Severity: {{severity}}')\n                                                              ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:32:04",
+    "target": "http://example.com",
+    "tool": "param_discovery",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/param_discovery.py\", line 30\n    log_to_sheet(__file__, summary) + f' | Severity: {{severity}}')\n                                                                  ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:33:00",
+    "target": "http://example.com",
+    "tool": "hidden_params",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/hidden_param_brute.py\", line 32\n    log_to_sheet(__file__, log) + f' | Severity: {{severity}}')\n                                                              ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:33:14",
+    "target": "http://example.com",
+    "tool": "dir_brute",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[2025-05-11 00:33:01.141248] DirBrute start za: http://example.com\n[-] http://example.com/admin => 404\n[-] http://example.com/login => 404\n[-] http://example.com/dashboard => 404\n[-] http://example.com/backup => 404\n[-] http://example.com/config => 404\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:34:05",
+    "target": "http://example.com",
+    "tool": "method_discovery",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/method_discovery.py\", line 24\n    log_to_sheet(__file__, rezultat) + f' | Severity: {{severity}}')\n                                                                   ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 00:34:11",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "sqlmap_auto",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em SQL Injection test...\n[+] Testiram: http://example.com | High | Admin login page?id=\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id= (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7b53bb0080>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=' OR 1=1 --\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id='%20OR%201=1%20-- (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7b517bf620>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=\" OR \"1\"=\"1\n[-] Gre\u0161ka: HTTPConnect"
+  },
+  {
+    "timestamp": "2025-05-11 00:35:38",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "xss_poc",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/xss_scanner.py\", line 45\n    log_to_sheet(__file__, rezultat) + f' | Severity: {{severity}}')\n                                                                   ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:00:35",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "cmd_inject",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "Traceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/command_injection.py\", line 2, in <module>\n    from utils.log_utils import log_to_sheet, classify_severity\nModuleNotFoundError: No module named 'utils'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:00:41",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "lfi_test",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/index.php?page=home../../../../../../../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home/etc/passwd\n[-] LFI test zavr\u0161en, ni\u0161ta nije prona\u0111eno.\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:05:16",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "idor_check",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/idor_tester.py\", line 31\n    log_to_text(__file__, f\"Mogu\u0107i IDOR: {test_url}\") + f' | Severity: {{severity}}')\n                                                                                    ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:06:36",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "ssrf",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/ssrf_checker.py\", line 22\n    log_to_text(__file__, log) + f' | Severity: {{severity}}')\n                                                             ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:06:43",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "subdomain_enum",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 01:07:30",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "rce_scan",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/rce_scanner.py\", line 16\n    log_to_text(__file__, f\"RCE: {full_url}\") + f' | Severity: {{severity}}')\n                                                                            ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:08:22",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "open_redirect",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/open_redirect.py\", line 21\n    log_to_text(__file__, f\"OPEN REDIRECT: {full_url} => {location}\") + f' | Severity: {{severity}}')\n                                                                                                    ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:08:27",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "sqli_scanner",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/item?id=%27+OR+%271%27%3D%271\n[-] Nema o\u010digledne razlike.\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:09:54",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "ssti",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/ssti_scanner.py\", line 20\n    log_to_text(__file__, log) + f' | Severity: {{severity}}')\n                                                             ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:10:42",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "param_discovery",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/param_discovery.py\", line 29\n    log_to_text(__file__, summary) + f' | Severity: {{severity}}')\n                                                                 ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:14:15",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "hidden_params",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/hidden_param_brute.py\", line 31\n    log_to_text(__file__, log) + f' | Severity: {{severity}}')\n                                                             ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:14:24",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "dir_brute",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[2025-05-11 01:14:15.797611] DirBrute start za: http://example.com\n[-] http://example.com/admin => 404\n[-] http://example.com/login => 404\n[-] http://example.com/dashboard => 404\n[-] http://example.com/backup => 404\n[-] http://example.com/config => 404\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:15:11",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "method_discovery",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/method_discovery.py\", line 23\n    log_to_text(__file__, rezultat) + f' | Severity: {{severity}}')\n                                                                  ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:15:24",
+    "target": "http://example.com",
+    "tool": "sqlmap_auto",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em SQL Injection test...\n[+] Testiram: http://example.com | High | Admin login page?id=\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id= (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7b255531d0>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=' OR 1=1 --\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id='%20OR%201=1%20-- (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7b25553560>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=\" OR \"1\"=\"1\n[-] Gre\u0161ka: HTTPConnect"
+  },
+  {
+    "timestamp": "2025-05-11 01:17:02",
+    "target": "http://example.com",
+    "tool": "xss_poc",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/xss_scanner.py\", line 44\n    log_to_text(__file__, rezultat) + f' | Severity: {{severity}}')\n                                                                  ^\nSyntaxError: unmatched ')'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:20:37",
+    "target": "http://example.com",
+    "tool": "cmd_inject",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "Traceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/command_injection.py\", line 2, in <module>\n    from utils.log_to_text import log_to_text, classify_severity\nModuleNotFoundError: No module named 'utils'\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:20:45",
+    "target": "http://example.com",
+    "tool": "lfi_test",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/index.php?page=home../../../../../../../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home/etc/passwd\n[-] LFI test zavr\u0161en, ni\u0161ta nije prona\u0111eno.\n"
+  },
+  {
+    "timestamp": "2025-05-11 01:23:18",
+    "target": "http://example.com",
+    "tool": "idor_check",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "Traceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/idor_tester.py\", line 4, in <module>\n    from utils.log_to_text import log_to_text, classify_severity\nModuleNotFoundError: No module named 'utils'\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:28:06",
+    "target": "http://example.com",
+    "tool": "ssrf",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "Traceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/ssrf_checker.py\", line 2, in <module>\n    from utils.log_to_text import log_to_text, classify_severity\nModuleNotFoundError: No module named 'utils'\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:28:14",
+    "target": "http://example.com",
+    "tool": "subdomain_enum",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 08:40:31",
+    "target": "http://example.com",
+    "tool": "rce_scan",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "Traceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/rce_scanner.py\", line 4, in <module>\n    from utils.log_to_text import log_to_text, classify_severity\nModuleNotFoundError: No module named 'utils.log_to_text'\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:50:45",
+    "target": "http://example.com",
+    "tool": "open_redirect",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "Traceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/open_redirect.py\", line 5, in <module>\n    from core.log_to_text import log_to_text, classify_severity\nModuleNotFoundError: No module named 'core.log_to_text'\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:50:51",
+    "target": "http://example.com",
+    "tool": "sqli_scanner",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/item?id=%27+OR+%271%27%3D%271\n[-] Nema o\u010digledne razlike.\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:50:56",
+    "target": "http://example.com",
+    "tool": "ssti",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 08:52:03",
+    "target": "http://example.com",
+    "tool": "param_discovery",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Poku\u0161avam GET parametre na: http://example.com | High | Admin login page\n[-] Nema otkrivenih reflektovanih GET parametara za http://example.com | High | Admin login page\nTraceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/param_discovery.py\", line 37, in <module>\n    discover_params(u)\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/param_discovery.py\", line 31, in discover_params\n    log_to_text(__file__, summary + f' | Severity: {{severity}}')\n  File \"/data/data/com.termux/files/home/ShadowFox2/core/log_to_text.py\", line 10, in log_to_text\n    with open(filename, \"a\") as f:\n         ^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'logs/log_/data/data/com.termux/files/home/ShadowFox2/poc_scripts/param_discovery.py.txt'\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:52:16",
+    "target": "http://example.com",
+    "tool": "hidden_params",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[\u2022] Testiram: http://example.com | High | Admin login page\n[\u2022] Testiram: http://testphp.vulnweb.com | Medium | Test SQL app\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:52:22",
+    "target": "http://example.com",
+    "tool": "dir_brute",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[2025-05-11 08:52:16.785795] DirBrute start za: http://example.com\n[-] http://example.com/admin => 404\n[-] http://example.com/login => 404\n[-] http://example.com/dashboard => 404\n[-] http://example.com/backup => 404\n[-] http://example.com/config => 404\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:55:10",
+    "target": "http://example.com",
+    "tool": "method_discovery",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[\u2022] Testiram: http://example.com | High | Admin login page\n[-] Gre\u0161ka za http://example.com | High | Admin login page: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7b7280af30>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\nTraceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/method_discovery.py\", line 28, in <module>\n    run()\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/method_discovery.py\", line 25, in run\n    log_to_text(__file__, rezultat + f' | Severity: {{severity}}')\n  File \"/data/data/com.termux/files/home/ShadowFox2/core/log_to_text.py\", line 10, in log_to_text\n    with open(filename, \"a\") as f:\n         ^^^^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: '"
+  },
+  {
+    "timestamp": "2025-05-11 08:55:18",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "sqlmap_auto",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em SQL Injection test...\n[+] Testiram: http://example.com | High | Admin login page?id=\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id= (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7175e344a0>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=' OR 1=1 --\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id='%20OR%201=1%20-- (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x71741b3260>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=\" OR \"1\"=\"1\n[-] Gre\u0161ka: HTTPConnect"
+  },
+  {
+    "timestamp": "2025-05-11 08:55:24",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "xss_poc",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com | High | Admin login page\n[WAF] Gre\u0161ka pri detekciji WAF-a\n[X] Gre\u0161ka prilikom slanja zahteva ka http://example.com | High | Admin login page: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7b06c03950>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://testphp.vulnweb.com | Medium | Test SQL app\n[WAF] Gre\u0161ka pri detekciji WAF-a\n[X] Gre\u0161ka prilikom slanja zahteva ka http://testphp.vulnweb.com | Medium | Test SQL app: HTTPConnectionPool(host='testphp.vulnweb.com%20%7c%20medium%20%7c%20test%20sql%20app', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7b06c30920>: Failed to resolve 'testphp.vulnweb.com%20%7c%20medium%20%7c%20test%20sql%"
+  },
+  {
+    "timestamp": "2025-05-11 08:56:57",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "cmd_inject",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "Traceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/command_injection.py\", line 4, in <module>\n    from utils.log_to_text import log_to_text, classify_severity\nModuleNotFoundError: No module named 'utils.log_to_text'\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:57:03",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "lfi_test",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/index.php?page=home../../../../../../../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home/etc/passwd\n[-] LFI test zavr\u0161en, ni\u0161ta nije prona\u0111eno.\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:58:11",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "idor_check",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "Traceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/idor_tester.py\", line 4, in <module>\n    from utils.log_to_text import log_to_text, classify_severity\nModuleNotFoundError: No module named 'utils'\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:58:14",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "ssrf",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 08:58:18",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "subdomain_enum",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 08:58:25",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "rce_scan",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em RCE test...\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=test;id\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=test|id\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=$(id)\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=`id`\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=%24(id)\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=test&&id\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:58:41",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "open_redirect",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em OPEN REDIRECT test...\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:58:48",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "sqli_scanner",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/item?id=%27+OR+%271%27%3D%271\n[-] Nema o\u010digledne razlike.\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:58:51",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "ssti",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 08:58:55",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "param_discovery",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Poku\u0161avam GET parametre na: http://example.com | High | Admin login page\n[-] Nema otkrivenih reflektovanih GET parametara za http://example.com | High | Admin login page\n[+] Poku\u0161avam GET parametre na: http://testphp.vulnweb.com | Medium | Test SQL app\n[-] Nema otkrivenih reflektovanih GET parametara za http://testphp.vulnweb.com | Medium | Test SQL app\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:58:58",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "hidden_params",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[\u2022] Testiram: http://example.com | High | Admin login page\n[\u2022] Testiram: http://testphp.vulnweb.com | Medium | Test SQL app\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:59:04",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "dir_brute",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[2025-05-11 08:58:58.406594] DirBrute start za: http://example.com\n[-] http://example.com/admin => 404\n[-] http://example.com/login => 404\n[-] http://example.com/dashboard => 404\n[-] http://example.com/backup => 404\n[-] http://example.com/config => 404\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:59:10",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "method_discovery",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[\u2022] Testiram: http://example.com | High | Admin login page\n[-] Gre\u0161ka za http://example.com | High | Admin login page: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x6e3aea1040>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[\u2022] Testiram: http://testphp.vulnweb.com | Medium | Test SQL app\n[-] Gre\u0161ka za http://testphp.vulnweb.com | Medium | Test SQL app: HTTPConnectionPool(host='testphp.vulnweb.com%20%7c%20medium%20%7c%20test%20sql%20app', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x6e39a42570>: Failed to resolve 'testphp.vulnweb.com%20%7c%20medium%20%7c%20test%20sql%20app' ([Errno 7] No address associated with hostname)\"))\n"
+  },
+  {
+    "timestamp": "2025-05-11 08:59:25",
+    "target": "http://example.com",
+    "tool": "sqlmap_auto",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em SQL Injection test...\n[+] Testiram: http://example.com | High | Admin login page?id=\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id= (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x71297ddf40>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=' OR 1=1 --\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id='%20OR%201=1%20-- (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7128fcf530>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=\" OR \"1\"=\"1\n[-] Gre\u0161ka: HTTPConnect"
+  },
+  {
+    "timestamp": "2025-05-11 08:59:31",
+    "target": "http://example.com",
+    "tool": "xss_poc",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com | High | Admin login page\n[WAF] Gre\u0161ka pri detekciji WAF-a\n[X] Gre\u0161ka prilikom slanja zahteva ka http://example.com | High | Admin login page: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x6fcaf63a70>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://testphp.vulnweb.com | Medium | Test SQL app\n[WAF] Gre\u0161ka pri detekciji WAF-a\n[X] Gre\u0161ka prilikom slanja zahteva ka http://testphp.vulnweb.com | Medium | Test SQL app: HTTPConnectionPool(host='testphp.vulnweb.com%20%7c%20medium%20%7c%20test%20sql%20app', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x6fcaf909b0>: Failed to resolve 'testphp.vulnweb.com%20%7c%20medium%20%7c%20test%20sql%"
+  },
+  {
+    "timestamp": "2025-05-11 08:59:35",
+    "target": "http://example.com",
+    "tool": "cmd_inject",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em Command Injection test...\n[+] Testiram: http://example.com | High | Admin login page?cmd=;cat /etc/passwd\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?cmd=;cat%20/etc/passwd (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7c733e6390>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?cmd=| cat /etc/passwd\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?cmd=%7C%20cat%20/etc/passwd (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x7c7340a6c0>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | A"
+  },
+  {
+    "timestamp": "2025-05-11 08:59:40",
+    "target": "http://example.com",
+    "tool": "lfi_test",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/index.php?page=home../../../../../../../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home/etc/passwd\n[-] LFI test zavr\u0161en, ni\u0161ta nije prona\u0111eno.\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:02:25",
+    "target": "http://example.com",
+    "tool": "idor_check",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "Traceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/idor_tester.py\", line 4, in <module>\n    from core.log_to_text import log_to_text, classify_severity\nModuleNotFoundError: No module named 'core'\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:02:29",
+    "target": "http://example.com",
+    "tool": "ssrf",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 09:02:31",
+    "target": "http://example.com",
+    "tool": "subdomain_enum",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 09:02:38",
+    "target": "http://example.com",
+    "tool": "rce_scan",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em RCE test...\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=test;id\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=test|id\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=$(id)\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=`id`\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=%24(id)\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=test&&id\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:02:53",
+    "target": "http://example.com",
+    "tool": "open_redirect",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em OPEN REDIRECT test...\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:02:58",
+    "target": "http://example.com",
+    "tool": "sqli_scanner",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/item?id=%27+OR+%271%27%3D%271\n[-] Nema o\u010digledne razlike.\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:03:01",
+    "target": "http://example.com",
+    "tool": "ssti",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 09:03:06",
+    "target": "http://example.com",
+    "tool": "param_discovery",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Poku\u0161avam GET parametre na: http://example.com | High | Admin login page\n[-] Nema otkrivenih reflektovanih GET parametara za http://example.com | High | Admin login page\n[+] Poku\u0161avam GET parametre na: http://testphp.vulnweb.com | Medium | Test SQL app\n[-] Nema otkrivenih reflektovanih GET parametara za http://testphp.vulnweb.com | Medium | Test SQL app\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:03:10",
+    "target": "http://example.com",
+    "tool": "hidden_params",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[\u2022] Testiram: http://example.com | High | Admin login page\n[\u2022] Testiram: http://testphp.vulnweb.com | Medium | Test SQL app\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:03:16",
+    "target": "http://example.com",
+    "tool": "dir_brute",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[2025-05-11 09:03:10.554838] DirBrute start za: http://example.com\n[-] http://example.com/admin => 404\n[-] http://example.com/login => 404\n[-] http://example.com/dashboard => 404\n[-] http://example.com/backup => 404\n[-] http://example.com/config => 404\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:03:20",
+    "target": "http://example.com",
+    "tool": "method_discovery",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[\u2022] Testiram: http://example.com | High | Admin login page\n[-] Gre\u0161ka za http://example.com | High | Admin login page: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x75a79bf1d0>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[\u2022] Testiram: http://testphp.vulnweb.com | Medium | Test SQL app\n[-] Gre\u0161ka za http://testphp.vulnweb.com | Medium | Test SQL app: HTTPConnectionPool(host='testphp.vulnweb.com%20%7c%20medium%20%7c%20test%20sql%20app', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x75a7a4a750>: Failed to resolve 'testphp.vulnweb.com%20%7c%20medium%20%7c%20test%20sql%20app' ([Errno 7] No address associated with hostname)\"))\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:03:23",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "sqlmap_auto",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em SQL Injection test...\n[+] Testiram: http://example.com | High | Admin login page?id=\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id= (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x6e67744530>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=' OR 1=1 --\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?id='%20OR%201=1%20-- (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x6e6300f4d0>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?id=\" OR \"1\"=\"1\n[-] Gre\u0161ka: HTTPConnect"
+  },
+  {
+    "timestamp": "2025-05-11 09:03:26",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "xss_poc",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com | High | Admin login page\n[WAF] Gre\u0161ka pri detekciji WAF-a\n[X] Gre\u0161ka prilikom slanja zahteva ka http://example.com | High | Admin login page: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x71ef01fcb0>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://testphp.vulnweb.com | Medium | Test SQL app\n[WAF] Gre\u0161ka pri detekciji WAF-a\n[X] Gre\u0161ka prilikom slanja zahteva ka http://testphp.vulnweb.com | Medium | Test SQL app: HTTPConnectionPool(host='testphp.vulnweb.com%20%7c%20medium%20%7c%20test%20sql%20app', port=80): Max retries exceeded with url: / (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x71ef048bc0>: Failed to resolve 'testphp.vulnweb.com%20%7c%20medium%20%7c%20test%20sql%"
+  },
+  {
+    "timestamp": "2025-05-11 09:03:28",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "cmd_inject",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em Command Injection test...\n[+] Testiram: http://example.com | High | Admin login page?cmd=;cat /etc/passwd\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?cmd=;cat%20/etc/passwd (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x72f9126e10>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | Admin login page?cmd=| cat /etc/passwd\n[-] Gre\u0161ka: HTTPConnectionPool(host='example.com%20%7c%20high%20%7c%20admin%20login%20page', port=80): Max retries exceeded with url: /?cmd=%7C%20cat%20/etc/passwd (Caused by NameResolutionError(\"<urllib3.connection.HTTPConnection object at 0x72f524e960>: Failed to resolve 'example.com%20%7c%20high%20%7c%20admin%20login%20page' ([Errno 7] No address associated with hostname)\"))\n[+] Testiram: http://example.com | High | A"
+  },
+  {
+    "timestamp": "2025-05-11 09:03:35",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "lfi_test",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/index.php?page=home../../../../../../../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home../../etc/passwd\n[+] Testiram: http://example.com/index.php?page=home/etc/passwd\n[-] LFI test zavr\u0161en, ni\u0161ta nije prona\u0111eno.\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:05:57",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "idor_check",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "Traceback (most recent call last):\n  File \"/data/data/com.termux/files/home/ShadowFox2/poc_scripts/idor_tester.py\", line 4, in <module>\n    from core.log_to_text import log_to_text, classify_severity\nModuleNotFoundError: No module named 'core'\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:06:05",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "ssrf",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 09:06:08",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "subdomain_enum",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": ""
+  },
+  {
+    "timestamp": "2025-05-11 09:06:14",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "rce_scan",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em RCE test...\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=test;id\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=test|id\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=$(id)\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=`id`\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=%24(id)\n[+] Testiram RCE na: http://testphp.vulnweb.com?input=test&&id\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:06:28",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "open_redirect",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[~] Pokre\u0107em OPEN REDIRECT test...\n"
+  },
+  {
+    "timestamp": "2025-05-11 09:06:33",
+    "target": "http://testphp.vulnweb.com",
+    "tool": "sqli_scanner",
+    "status": "done",
+    "severity": "unknown",
+    "tags": [],
+    "output": "[+] Testiram: http://example.com/item?id=%27+OR+%271%27%3D%271\n[-] Nema o\u010digledne razlike.\n"
+  }
+]
