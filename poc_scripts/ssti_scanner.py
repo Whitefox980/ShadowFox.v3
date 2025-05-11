@@ -1,29 +1,49 @@
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import requests
-from core.log_to_text import log_to_text, classify_severity
-SSTI_PAYLOAD = "{{7*7}}"
-SSTI_EVAL = "49"
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-def load_targets(file_path):
-    with open(file_path, "r") as f:
-        return [line.strip() for line in f if line.strip()]
+from log_to_text import log_to_text
+from tools.auto_add_severity import classify_severity
+from logics.fuzz_ai_trigger import ai_trigger_if_needed
 
-def run_ssti_scan():
-    targets = load_targets("targets/targets.txt")
-    for base_url in targets:
-        test_url = f"{base_url}?input={SSTI_PAYLOAD}"
+def test_ssti(url):
+    payloads = [
+        "{{7*7}}",        # Jinja2
+        "${7*7}",         # Velocity
+        "#{7*7}",         # Twig
+        "<%= 7*7 %>",     # ERB
+        "${{7*7}}"
+    ]
+
+    headers = {
+        "User-Agent": "ShadowFox-SSTI"
+    }
+
+    for payload in payloads:
+        if "FUZZ" in url:
+            test_url = url.replace("FUZZ", payload)
+        else:
+            test_url = f"{url}?input={payload}"
+
         try:
-            r = requests.get(test_url, timeout=5)
-            if SSTI_EVAL in r.text:
-                log = f"[+] SSTI detektovan: {test_url}"
-                print(log)
-                severity = classify_severity(log)
-                log_to_text(__file__, log + f' | Severity: {{severity}}')
-            else:
-                print(f"[-] Nema SSTI: {test_url}")
-        except:
-            continue
+            res = requests.get(test_url, headers=headers, timeout=8)
+            if "49" in res.text or "error" in res.text.lower():
+                log_to_text(f"[SSTI] {test_url} -> {payload}")
+                severity = classify_severity(res.text)
+                ai_trigger_if_needed("SSTI", test_url, payload, res.text, severity)
+                print(f"[+] SSTI Detekcija: {test_url}")
+                return {"url": test_url, "payload": payload, "severity": severity}
+        
+        except Exception as e:
+            print(f"[-] Greška: {e}")
+    
+    print("[-] SSTI nije detektovan.")
+    return None
 
 if __name__ == "__main__":
-    run_ssti_scan()
+    with open("targets/targets.txt", "r") as f:
+        targets = f.read().splitlines()
+    
+    for url in targets:
+        test_ssti(url)

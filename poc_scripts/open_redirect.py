@@ -1,37 +1,50 @@
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import requests
-from urllib.parse import urlencode
-from core.log_to_text import log_to_text, classify_severity
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-REDIRECT_PAYLOADS = [
-    "https://evil.com",
-    "//evil.com",
-    "/\\evil.com",
-    "https://google.com@evil.com",
-]
+from log_to_text import log_to_text
+from tools.auto_add_severity import classify_severity
+from logics.fuzz_ai_trigger import ai_trigger_if_needed
 
-def test_open_redirect(base_url):
-    for param in ["url", "next", "redirect", "redirect_url", "continue"]:
-        for payload in REDIRECT_PAYLOADS:
-            full_url = f"{base_url}?{urlencode({param: payload})}"
-            try:
-                response = requests.get(full_url, allow_redirects=False, timeout=5)
-                location = response.headers.get("Location", "")
-                if "evil.com" in location:
-                    print(f"[!] Mogući OPEN REDIRECT: {full_url} => {location}")
-                    severity = classify_severity(f"OPEN REDIRECT: {full_url} => {location}")
-                    log_to_text(__file__, f"OPEN REDIRECT: {full_url} => {location}" + f' | Severity: {{severity}}')
-            except Exception as e:
-                print(f"[-] Greška: {e} za {full_url}")
-
-def run_open_redirect():
-    print("[~] Pokrećem OPEN REDIRECT test...")
-    targets = [
-        "http://testphp.vulnweb.com",  # dodaj ciljeve
+def test_open_redirect(url):
+    payloads = [
+        "https://evil.com",
+        "//evil.com",
+        "/\\evil.com",
+        "///evil.com",
+        "http://attacker.com"
     ]
-    for target in targets:
-        test_open_redirect(target)
+
+    headers = {
+        "User-Agent": "ShadowFox-Redirect"
+    }
+
+    for payload in payloads:
+        if "FUZZ" in url:
+            test_url = url.replace("FUZZ", payload)
+        else:
+            test_url = f"{url}?next={payload}"
+
+        try:
+            r = requests.get(test_url, headers=headers, timeout=8, allow_redirects=False)
+            location = r.headers.get("Location", "")
+            if location.startswith("http://") or location.startswith("https://"):
+                log_to_text(f"[OPEN_REDIRECT] {test_url} -> {location}")
+                severity = classify_severity(location)
+                ai_trigger_if_needed("Open Redirect", test_url, payload, location, severity)
+                print(f"[+] Otvoreni redirect detektovan: {test_url} -> {location}")
+                return {"url": test_url, "redirect_to": location, "severity": severity}
+        
+        except Exception as e:
+            print(f"[-] Greška: {e}")
+
+    print("[-] Nema otvorenih redirecta.")
+    return None
 
 if __name__ == "__main__":
-    run_open_redirect()
+    with open("targets/targets.txt", "r") as f:
+        targets = f.read().splitlines()
+    
+    for url in targets:
+        test_open_redirect(url)

@@ -1,41 +1,42 @@
-import json
-from datetime import datetime
+import sys
+import os
 
-def ask_ai(question: str) -> dict:
-    # Ovo je mock – zameniti pravim AI pozivom ako želiš
-    return {
-        "question": question,
-        "answer": f"Simuliran odgovor na: {question}",
-        "timestamp": datetime.utcnow().isoformat()
-    }
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'poc_scripts')))
 
-def save_to_log(entry: dict, log_path="data/logs/bughunt_log.jsonl"):
-    with open(log_path, "a") as f:
-        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+from shadowfuzz_all import shadowfuzz_all
+from shadowscan_summary import summarize_logs
+from shadow_log_center import generate_ui
+from generate_pdf import create_summary_pdf
+
+def load_targets():
+    with open("targets/targets.txt", "r") as f:
+        return f.read().splitlines()
 
 def main():
-    while True:
-        q = input(">>> Pitaj AI (ili 'exit'): ").strip()
-        if q.lower() == "exit":
-            break
-        response = ask_ai(q)
-        print(f"AI: {response['answer']}")
-        save_to_log(response)
+    args = sys.argv[1:]
+    targets = load_targets()
+
+    if "--fuzz" in args:
+        shadowfuzz_all(targets)
+    elif "--summary" in args:
+        summary = summarize_logs()
+        generate_ui(summary)
+    elif "--pdf" in args:
+        summary = summarize_logs()
+        create_summary_pdf(summary)
+    elif "--recon" in args:
+        from shadowrecon_all import shadowrecon_all
+        shadowrecon_all(targets)
+    else:
+        print("""
+ShadowFox CLI:
+  --fuzz       Pokreće sve fuzz testove + analizu + PDF
+  --summary    Prikazuje rezime iz logova
+  --pdf        Samo generiše PDF iz postojećih logova
+
+Primer:
+  python main.py --fuzz
+""")
 
 if __name__ == "__main__":
     main()
-# 3. Generisanje izveštaja na osnovu rezultata
-log("\n[+] Generišem završni izveštaj...")
-try:
-    subprocess.run(["python", "logics/generate_report.py"], check=True)
-    log("[+] Izveštaj uspešno generisan.")
-except subprocess.CalledProcessError:
-    log("[-] Greška prilikom generisanja izveštaja.")
-# Upload na Google Drive
-log("\n[+] Upload rezultata na Google Drive...")
-try:
-    from drive_upload import upload_results_to_drive
-    upload_results_to_drive()
-    log("[+] Upload uspešan.")
-except Exception as e:
-    log(f"[-] Greska prilikom upload-a: {e}")

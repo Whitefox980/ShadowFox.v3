@@ -1,35 +1,36 @@
-# fajl: poc_scripts/idor_tester.py
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from core.log_to_text import log_to_text, classify_severity
 import requests
-from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
-def generate_urls(base_url):
-    parsed = urlparse(base_url)
-    query = parse_qs(parsed.query)
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-    urls = []
-    for key, values in query.items():
-        for i in range(1, 6):
-            query[key] = [str(i)]
-            new_query = urlencode(query, doseq=True)
-            new_url = urlunparse((parsed.scheme, parsed.netloc, parsed.path, '', new_query, ''))
-            urls.append(new_url)
-    return urls
+from log_to_text import log_to_text
+from tools.auto_add_severity import classify_severity
+from logics.fuzz_ai_trigger import ai_trigger_if_needed
 
-def run_idor_test():
-    print("[~] Pokrećem IDOR test...")
-    with open("targets/targets.txt", "r") as f:
-        targets = [line.strip() for line in f if line.strip() and not line.startswith("#")]
+def test_idor(base_url, param="id", start=1, end=5):
+    headers = {
+        "User-Agent": "ShadowFox-IDOR-Tester"
+    }
 
-    for url in targets:
-        print(f"[+] Analiziram: {url}")
-        test_urls = generate_urls(url)
-        for test_url in test_urls:
-            r = requests.get(test_url)
-            if "user" in r.text or "admin" in r.text or r.status_code == 200:
-                print(f"[!] Mogući IDOR: {test_url}")
-                severity = classify_severity(f"Mogući IDOR: {test_url}")
-                log_to_text(__file__, f"Mogući IDOR: {test_url} | Severity: {severity}")
+    last_response = ""
+    for i in range(start, end + 1):
+        url = f"{base_url}?{param}={i}"
+        try:
+            res = requests.get(url, headers=headers, timeout=6)
+            if res.status_code == 200 and res.text != last_response:
+                print(f"[+] Moguća IDOR ranjivost za {param}={i}")
+                log_to_text(f"[IDOR] {url}")
+                severity = classify_severity(res.text)
+                ai_trigger_if_needed("IDOR", url, f"{param}={i}", res.text, severity)
+                last_response = res.text
+        except Exception as e:
+            print(f"[-] Greška: {e}")
+
+    print("[-] Testiranje IDOR završeno.")
+
 if __name__ == "__main__":
-    run_idor_test()
+    with open("targets/targets.txt", "r") as f:
+        urls = f.read().splitlines()
+
+    for base in urls:
+        test_idor(base)

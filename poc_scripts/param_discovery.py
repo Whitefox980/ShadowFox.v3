@@ -1,37 +1,35 @@
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import requests
-from urllib.parse import urlparse, urlunparse
-from core.log_to_text import log_to_text, classify_severity
-COMMON_PARAMS = ["id", "page", "user", "ref", "lang", "q", "search", "file", "redirect", "url"]
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-def discover_params(base_url):
-    parsed = urlparse(base_url)
-    vulnerable = []
+from log_to_text import log_to_text
+from tools.auto_add_severity import classify_severity
+from logics.fuzz_ai_trigger import ai_trigger_if_needed
 
-    print(f"[+] Pokušavam GET parametre na: {base_url}")
+def discover_params(url, wordlist=None):
+    if wordlist is None:
+        wordlist = [
+            "debug", "test", "admin", "submit", "role", "access", "auth",
+            "config", "cmd", "action", "search", "validate"
+        ]
 
-    for param in COMMON_PARAMS:
-        url = f"{base_url}?{param}=test"
+    headers = {"User-Agent": "ShadowFox-ParamDiscovery"}
+    results = []
+
+    for param in wordlist:
+        test_url = f"{url}?{param}=test"
         try:
-            r = requests.get(url, timeout=5)
-            if "test" in r.text.lower():
-                print(f"[!] Refleksija za parametar: {param}")
-                vulnerable.append(param)
-        except:
-            pass
+            res = requests.get(test_url, headers=headers, timeout=6)
+            if res.status_code == 200 and "error" not in res.text.lower():
+                results.append({
+                    "url": test_url,
+                    "param": param,
+                    "content": res.text,
+                    "status": res.status_code
+                })
+                print(f"[+] Parametar otkriven: {param}")
+        except Exception as e:
+            print(f"[-] Greška kod {test_url}: {e}")
 
-    if vulnerable:
-        summary = f"[!] Otkriveni reflektovani parametri: {', '.join(vulnerable)} na {base_url}"
-    else:
-        summary = f"[-] Nema otkrivenih reflektovanih GET parametara za {base_url}"
-
-    print(summary)
-    severity = classify_severity(summary)
-    log_to_text(__file__, summary + f' | Severity: {{severity}}')
-
-if __name__ == "__main__":
-    with open("targets/targets.txt") as f:
-        urls = [line.strip() for line in f if line.strip()]
-        for u in urls:
-            discover_params(u)
+    return results

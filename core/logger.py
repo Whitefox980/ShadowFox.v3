@@ -1,5 +1,5 @@
-import os
 import json
+import os
 from datetime import datetime
 
 LOG_FILE = "results_log.json"
@@ -12,28 +12,21 @@ def log_result(target, tool, output, status="unknown", severity="unknown", tags=
         "status": status,
         "severity": severity,
         "tags": tags,
-        "output": output[:1000]
+        "output": output.strip()[:1000]
     }
 
     data = []
-
-    # Učitaj postojeće ako fajl postoji
     if os.path.exists(LOG_FILE):
         with open(LOG_FILE, "r") as f:
-            content = f.read().strip()
-            if content:
-                try:
+            try:
+                content = f.read().strip()
+                if content:
                     data = json.loads(content)
-                except Exception as e:
-                    print(f"[-] Greška pri čitanju JSON loga: {e}")
-                    data = []
+            except Exception:
+                data = []
 
     data.append(log_data)
+    with open(LOG_FILE, "w") as f:
+        json.dump(data, f, indent=2)
 
-    # Zapiši u log fajl
-    try:
-        with open(LOG_FILE, "w") as f:
-            json.dump(data, f, indent=2)
-        print(f"[+] Logovan rezultat za {tool} na {target}.")
-    except Exception as e:
-        print(f"[-] Greška pri upisu u log fajl: {e}")
+    print(f"[+] Logovan rezultat za {tool} na {target}.")

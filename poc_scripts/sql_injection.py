@@ -1,12 +1,13 @@
-import requests
 import os
+import requests
 from datetime import datetime
+from core.log_to_text import log_to_text, classify_severity
 
 SQL_PAYLOADS = ["", "' OR 1=1 --", "\" OR \"1\"=\"1", "' OR '1'='1"]
 
 def load_targets(file_path="targets/targets.txt"):
     with open(file_path, "r") as f:
-        return [line.strip() for line in f if line.strip()]
+        return [line.strip() for line in f if line.strip() and not line.startswith("#")]
 
 def classify_severity(result: str) -> str:
     result = result.lower()
@@ -20,10 +21,12 @@ def classify_severity(result: str) -> str:
         return "Low"
     return "Unknown"
 
-def log_to_txt(filename, content):
+def log_to_text(filename, content):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    with open("results/sql_log.txt", "a") as f:
-        f.write(f"\n=== {filename} | {timestamp} ===\n{content}\n")
+    os.makedirs("logs", exist_ok=True)
+    file = os.path.join("logs", f"log_{filename}.txt")
+    with open(file, "a") as f:
+        f.write(f"\n===[{timestamp}]===\n{content}\n")
 
 def test_sql_injection(base_url):
     findings = []
@@ -33,20 +36,20 @@ def test_sql_injection(base_url):
         try:
             r = requests.get(test_url, timeout=5)
             if any(x in r.text.lower() for x in ["sql", "syntax", "mysql", "query"]):
-                print(f"[!] Mogući SQLi: {test_url}")
+                print(f"[!!] Mogući SQLi: {test_url}")
                 findings.append(test_url)
         except Exception as e:
-            print(f"[-] Greška: {e}")
+            print(f"[!] Greška: {e}")
     return findings
 
 def run_sql_injection_scan():
-    print("[~] Pokrećem SQL Injection test...")
+    print("[-] Pokrećem SQL Injection test...")
     targets = load_targets()
     for url in targets:
         found = test_sql_injection(url)
         if found:
             severity = classify_severity("\n".join(found))
-            log_to_txt(__file__, "\n".join(found) + f" | Severity: {severity}")
+            log_to_text(__file__, "\n".join(found) + f" | Severity: {severity}")
 
 if __name__ == "__main__":
     run_sql_injection_scan()

@@ -1,137 +1,60 @@
-import subprocess
 import os
-from tools_config import TOOLS
 from logics.ai_tools import suggest_exploit, suggest_fix, classify_severity
-from logics.generate_pdf import save_ai_report_to_pdf
-from core.logger import log_result
-
-def run_tool(script_name, target_url):
-    try:
-        result = subprocess.run(
-            ["python3", f"poc_scripts/{script_name}", target_url],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            timeout=60
-        )
-        return result.stdout
-    except subprocess.TimeoutExpired:
-        return "[!] Alat je istekao (timeout)"
-    except Exception as e:
-        return f"[!] Greška prilikom pokretanja: {str(e)}"
-
-def get_targets(min_priority="Low"):
-    priorities_order = {"Low": 1, "Medium": 2, "High": 3}
-    min_level = priorities_order.get(min_priority.capitalize(), 1)
-    targets = []
-
-    try:
-        with open("targets/targets.txt") as f:
-            for line in f:
-                parts = [p.strip() for p in line.strip().split("|")]
-                if len(parts) >= 2:
-                    url = parts[0]
-                    priority = parts[1].capitalize()
-                    comment = parts[2] if len(parts) > 2 else ""
-                    if priorities_order.get(priority, 0) >= min_level:
-                        targets.append({"url": url, "priority": priority, "comment": comment})
-    except FileNotFoundError:
-        print("[!] targets.txt nije pronađen.")
-    return targets
+from tools.shadow_fuzzcore import run_all_fuzz_modules
+from tools.shadow_payload_gen import generate_payloads
 
 def run_all():
-    min_priority = input("Minimalni prioritet za skeniranje (Low/Medium/High): ").strip()
-    targets = get_targets(min_priority)
-    if not targets:
-        print("[!] Nema meta za testiranje.")
+    print("[*] Pokrećem sve testove za sve mete...")
+
+    try:
+        with open("targets/targets.txt", "r") as f:
+            targets = [line.strip() for line in f.readlines() if line.strip()]
+    except FileNotFoundError:
+        print("[-] targets.txt nije pronađen.")
         return
 
-    for target_data in targets:
-        target = target_data["url"]
-        print(f"\n=== META: {target} | {target_data['priority']} - {target_data['comment']} ===")
+    if not targets:
+        print("[-] Nema meta u targets.txt")
+        return
 
-        for tool_id, script in TOOLS.items():
-            print(f"[*] {tool_id} ...")
-            output = run_tool(script, target)
-            print(output)
+    testovi = [
+        ("sql_injection", "SQL Injection Tester"),
+        ("xss_scanner", "XSS Scanner"),
+        ("ssrf_checker", "SSRF Checker"),
+        ("open_redirect", "Open Redirect Tester"),
+        ("idor_tester", "IDOR Tester"),
+        ("command_injection", "Command Injection Scanner"),
+        ("lfi_scanner", "LFI Scanner"),
+        ("ssti_scanner", "SSTI Scanner"),
+        ("csrf_poc", "CSRF Tester"),
+        ("dir_brute", "Directory Bruteforce")
+    ]
 
-            do_ai = input("AI analiza? [y/n]: ").lower()
-            severity = "unknown"
-            if do_ai == "y":
+    for target in targets:
+        print(f"\n[+] Testiram metu: {target}")
+        output = ""
+        for skripta, opis in testovi:
+            print(f"[*] {opis} ...")
+            result = os.popen(f"python poc_scripts/{skripta}.py {target}").read()
+            output += f"\n--- {opis} ---\n{result}\n"
+
+        analiza = input("AI analiza? [y/n]: ").strip().lower()
+        if analiza == "y":
+            try:
                 exploit = suggest_exploit(output)
                 fix = suggest_fix(output)
                 severity = classify_severity(output)
 
-                print("\n>>> AI Eksploatacija:\n", exploit)
-                print("\n>>> AI Preporuka:\n", fix)
-                print("\n>>> Ozbiljnost:", severity)
+                print(f"\n[+] AI Exploit predlog:\n{exploit}")
+                print(f"[+] AI Fix predlog:\n{fix}")
+                print(f"[+] Procena ozbiljnosti: {severity}")
+            except Exception as e:
+                print(f"[!] Greška u AI analizi: {e}")
 
-                if input("Sačuvaj kao PDF? [y/n]: ").lower() == "y":
-                    combined = f"{tool_id.upper()} na {target}\n\n[OUTPUT]\n{output}\n\n[EXPLOIT]\n{exploit}\n\n[FIX]\n{fix}\n\n[SEVERITY]: {severity}"
-                    save_ai_report_to_pdf(combined, site=target)
+def run_fuzz_modules():
+    print("\n[*] Pokrećem ShadowFuzz AI All-In-One...")
+    run_all_fuzz_modules()
 
-            log_result(target, tool_id, output, status="done", severity=severity)
-            print("-" * 50)
-
-def run_all_headless():
-    targets = get_targets("Low")
-    if not targets:
-        print("[!] Nema meta.")
-        return
-
-    for target_data in targets:
-        target = target_data["url"]
-        for tool_id, script in TOOLS.items():
-            output = run_tool(script, target)
-            exploit = suggest_exploit(output)
-            fix = suggest_fix(output)
-            severity = classify_severity(output)
-
-            combined = f"{tool_id.upper()} na {target}\n\n[OUTPUT]\n{output}\n\n[EXPLOIT]\n{exploit}\n\n[FIX]\n{fix}\n\n[SEVERITY]: {severity}"
-            save_ai_report_to_pdf(combined, site=target)
-            log_result(target, tool_id, output, status="done", severity=severity)
-
-    print("[✓] Headless završeno.")
-
-def run_selected():
-    targets = get_targets()
-    if not targets:
-        print("[!] Nema meta.")
-        return
-
-    print("Dostupni alati:")
-    keys = list(TOOLS.keys())
-    for i, tool in enumerate(keys):
-        print(f"[{i+1}] {tool}")
-    selection = input("Unesi brojeve alata (npr. 1,3): ")
-    indices = [int(x.strip()) - 1 for x in selection.split(",")]
-
-    for target_data in targets:
-        target = target_data["url"]
-        print(f"\n=== META: {target} ===")
-
-        for i in indices:
-            tool_id = keys[i]
-            script = TOOLS[tool_id]
-            output = run_tool(script, target)
-            print(output)
-
-            do_ai = input("AI analiza? [y/n]: ").lower()
-            severity = "unknown"
-            if do_ai == "y":
-                exploit = suggest_exploit(output)
-                fix = suggest_fix(output)
-                severity = classify_severity(output)
-
-                print("\n>>> AI Eksploatacija:\n", exploit)
-                print("\n>>> AI Preporuka:\n", fix)
-                print("\n>>> Ozbiljnost:", severity)
-
-                if input("PDF? [y/n]: ").lower() == "y":
-                    combined = f"{tool_id.upper()} na {target}\n\n[OUTPUT]\n{output}\n\n[EXPLOIT]\n{exploit}\n\n[FIX]\n{fix}\n\n[SEVERITY]: {severity}"
-                    save_ai_report_to_pdf(combined, site=target)
-                from core.tagger import get_tags
-                tags = get_tags(tool_id, output)
-                log_result(target, tool_id, output, status="done", severity=severity, tags=tags)
-                log_result(target, tool_id, output, status="done", severity=severity)
-            print("-" * 50)
+def run_payload_generator():
+    print("\n[*] Pokrećem ShadowPayload Generator...")
+    generate_payloads()

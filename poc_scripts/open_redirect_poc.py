@@ -1,19 +1,33 @@
-import requests
-from urllib.parse import urlencode
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-TARGET_URL = "http://example.com/redirect?"  # Izmeni ovo
+from log_to_text import log_to_text
+from tools.auto_add_severity import classify_severity
+from logics.fuzz_ai_trigger import ai_trigger_if_needed
 
-def run_open_redirect_scan():
-    payload_url = "http://evil.com"
-    full_url = TARGET_URL + urlencode({"next": payload_url})
-    try:
-        res = requests.get(full_url, allow_redirects=False)
-        if "Location" in res.headers and payload_url in res.headers["Location"]:
-            print("[!] Moguća Open Redirect ranjivost!")
-        else:
-            print("[-] Nema redirekcije ka malicioznom URL-u.")
-    except Exception as e:
-        print(f"[X] Greška: {e}")
+def generate_redirect_poc(url, param="redirect", destination="https://evil.com"):
+    test_url = f"{url}?{param}={destination}"
+
+    html = f"""<html>
+  <body>
+    <h3>Open Redirect PoC</h3>
+    <iframe src="{test_url}" width="800" height="600"></iframe>
+  </body>
+</html>"""
+
+    filename = f"redirect_poc_{param}.html"
+    with open(filename, "w") as f:
+        f.write(html)
+
+    log_to_text(f"[REDIRECT_POC] {test_url} -> {filename}")
+    ai_trigger_if_needed("Open Redirect", test_url, destination, html, "medium")
+    print(f"[+] Open Redirect PoC generisan: {filename}")
+    return filename
 
 if __name__ == "__main__":
-    run_open_redirect_scan()
+    with open("targets/targets.txt", "r") as f:
+        targets = f.read().splitlines()
+    
+    for url in targets:
+        generate_redirect_poc(url)

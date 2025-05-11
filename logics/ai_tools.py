@@ -1,48 +1,49 @@
 import os
-import json
 from openai import OpenAI
+from dotenv import load_dotenv
 
-def suggest_exploit(output):
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant..."},
-            {"role": "user", "content": output}
-        ]
-    )
-    return response.choices[0].message.content.strip()
-# Pokušaj da pročita OPENAI_API_KEY iz config fajla
-def load_api_key():
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
+
+client = OpenAI(api_key=api_key)
+
+DEFAULT_MODEL = "gpt-4-0125-preview"  # Možeš ovde zameniti u "gpt-3.5-turbo" ako hoćeš test
+
+def suggest_exploit(output, model=DEFAULT_MODEL):
     try:
-        with open("config.json") as f:
-            return json.load(f).get("OPENAI_API_KEY")
-    except Exception:
-        return os.getenv("OPENAI_API_KEY")
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": "You are a cybersecurity expert. Suggest a possible exploit based on the scan output."},
+                {"role": "user", "content": f"Scan Output:\n{output}"}
+            ]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"[AI GREŠKA] {str(e)}"
 
-client = OpenAI(api_key=load_api_key())
+def suggest_fix(output, model=DEFAULT_MODEL):
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": "You are a security advisor. Suggest a mitigation for this vulnerability."},
+                {"role": "user", "content": f"Vulnerability:\n{output}"}
+            ]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"[AI GREŠKA] {str(e)}"
 
-
-
-def suggest_fix(output):
-    prompt = f"""Na osnovu ovog skena, predloži kako developer može da zakrpi ranjivost:\n{output}"""
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.4,
-    )
-    return response.choices[0].message.content.strip()
-
-def classify_severity(output_text):
-    text = output_text.lower()
-    if any(x in text for x in ["remote code execution", "rce", "root", "system("]):
-        return "Critical"
-    elif "sql" in text and "error" in text:
-        return "High"
-    elif "xss" in text or "script" in text:
-        return "Medium"
-    elif "open redirect" in text or "302" in text:
-        return "Medium"
-    elif "info" in text or "directory listing" in text:
-        return "Low"
-    else:
-        return "Unknown"
+def classify_severity(output, model=DEFAULT_MODEL):
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": "Classify the severity of this vulnerability as: Low, Medium, High, or Critical."},
+                {"role": "user", "content": f"Vulnerability:\n{output}"}
+            ]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"[AI GREŠKA] {str(e)}"

