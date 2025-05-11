@@ -3,26 +3,27 @@ import re
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from log_to_text import log_to_text
+from poc_scripts.log_to_text import log_to_text
 
 LOG_DIR = "logs"
+
 pattern_map = {
-    "SQLi": r"SQL(I|I_POC)?",
-    "XSS": r"XSS(_POC)?",
-    "LFI": r"LFI(-RFI)?",
-    "RCE": r"RCE",
-    "SSTI": r"SSTI",
-    "SSRF": r"SSRF",
-    "IDOR": r"IDOR",
-    "Open Redirect": r"OPEN_REDIRECT(_POC)?",
-    "Auth Bypass": r"AUTH-BYPASS",
-    "Param Discovery": r"PARAM_DISCOVERY",
-    "Hidden Param": r"HIDDEN_PARAM",
-    "Dir Brute": r"DIR_BRUTE",
-    "HTTP Method": r"METHOD",
-    "Fuzz Split": r"FUZZ_PARAM_SPLITTER",
-    "Fuzz JSON": r"FUZZ_JSON_BODY",
-    "Fuzz Method": r"FUZZ_HTTP_METHOD"
+    "SQLi": r"SQL.*?I_POC?#",
+    "XSS": r"XSS(_POC)?#",
+    "LFI": r"LFI(-RFI)?#",
+    "RCE": r"RCE#",
+    "SSTI": r"SSTI#",
+    "SSRF": r"SSRF#",
+    "IDOR": r"IDOR#",
+    "Open Redirect": r"OPEN_REDIRECT(_POC)?#",
+    "Auth Bypass": r"AUTH-BYPASS#",
+    "Param Discovery": r"#PARAM_DISCOVERY#",
+    "Hidden Param": r"#HIDDEN_PARAM#",
+    "Dir Brute": r"#DIR_BRUTE#",
+    "HTTP Method": r"#METHOD#",
+    "Fuzz Split": r"#FUZZ_PARAM_SPLITTER#",
+    "Fuzz JSON": r"#FUZZ_JSON_BODY#",
+    "Fuzz Method": r"#FUZZ_HTTP_METHOD#"
 }
 
 def summarize_logs():
@@ -38,13 +39,12 @@ def summarize_logs():
                     summary[key] += len(matches)
 
     total = sum(summary.values())
-    log_to_text("[SUMMARY] ShadowScan izvršena analiza svih logova.")
-    
+    log_to_text("SUMMARY", f"Izvršena analiza svih logova. Ukupno detekcija: {total}")
     print("\n[+] Rezime detekcija:")
     for key, count in summary.items():
         if count > 0:
             print(f" - {key}: {count}")
-    print(f"\n[✓] Ukupno detekcija: {total}")
+    print(f"\n[/] Ukupno detekcija: {total}")
 
     return summary
 

@@ -3,8 +3,8 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from log_to_text import log_to_text
-from tools.auto_add_severity import classify_severity
+from poc_scripts.log_to_text import log_to_text
+from poc_scripts.auto_add_severity import classify_severity
 from logics.fuzz_ai_trigger import ai_trigger_if_needed
 
 def fuzz_http_methods(url):

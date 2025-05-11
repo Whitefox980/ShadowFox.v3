@@ -1,2 +1,1 @@
-http://example.com | High | Admin login page
-http://testphp.vulnweb.com | Medium | Test SQL app
+https://access.remitly.com?id=

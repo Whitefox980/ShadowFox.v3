@@ -1,21 +1,21 @@
 def classify_severity(response_text):
     """
-    Jednostavna klasifikacija težine ranjivosti na osnovu sadržaja odgovora.
-    Možeš proširiti sa AI kasnije.
+    Klasifikuj odgovor servera po ozbiljnosti potencijalne ranjivosti.
     """
-    response_text = response_text.lower()
+    text = response_text.lower()
 
-    high_indicators = ["root:x", "sql syntax", "admin panel", "command executed", "unauthorized access"]
-    medium_indicators = ["error", "undefined", "stack trace", "warning", "unexpected"]
-    low_indicators = ["not found", "403 forbidden", "missing", "invalid"]
+    high = ["root:x", "sql syntax", "command executed", "unauthorized", "database error"]
+    medium = ["warning", "stack trace", "exception", "undefined", "invalid"]
+    low = ["not found", "missing", "403 forbidden"]
 
-    for pattern in high_indicators:
-        if pattern in response_text:
+    for kw in high:
+        if kw in text:
             return "HIGH"
-    for pattern in medium_indicators:
-        if pattern in response_text:
+    for kw in medium:
+        if kw in text:
             return "MEDIUM"
-    for pattern in low_indicators:
-        if pattern in response_text:
+    for kw in low:
+        if kw in text:
             return "LOW"
+
     return "INFO"

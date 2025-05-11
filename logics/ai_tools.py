@@ -1,15 +1,37 @@
 import os
-from openai import OpenAI
 from dotenv import load_dotenv
 
-load_dotenv()
-api_key = os.getenv("OPENAI_API_KEY")
+USE_AI = os.getenv("DISABLE_AI", "0") != "1"
 
-client = OpenAI(api_key=api_key)
-
+if USE_AI:
+    from openai import OpenAI
+    load_dotenv()
+    api_key = os.getenv("OPENAI_API_KEY")
+    client = OpenAI(api_key=api_key)
+else:
+    client = None
 DEFAULT_MODEL = "gpt-4-0125-preview"  # Možeš ovde zameniti u "gpt-3.5-turbo" ako hoćeš test
 
+def classify_severity(response_text):
+    
+    if not USE_AI:
+        return "AI DISABLED"
+    try:
+        response = client.chat.completions.create(
+            model=DEFAULT_MODEL,
+            messages=[
+                {"role": "system", "content": "Classify the severity of this vulnerability as: Low, Medium, High, or Critical."},
+                {"role": "user", "content": f"Vulnerability:\n{response_text}"}
+            ]
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        return f"[AI GREŠKA] {str(e)}"
+
+
 def suggest_exploit(output, model=DEFAULT_MODEL):
+    if not USE_AI:
+        return "AI DISABLED"
     try:
         response = client.chat.completions.create(
             model=model,
@@ -21,8 +43,9 @@ def suggest_exploit(output, model=DEFAULT_MODEL):
         return response.choices[0].message.content
     except Exception as e:
         return f"[AI GREŠKA] {str(e)}"
-
 def suggest_fix(output, model=DEFAULT_MODEL):
+    if not USE_AI:
+        return "AI DISABLED"
     try:
         response = client.chat.completions.create(
             model=model,
@@ -34,8 +57,9 @@ def suggest_fix(output, model=DEFAULT_MODEL):
         return response.choices[0].message.content
     except Exception as e:
         return f"[AI GREŠKA] {str(e)}"
-
 def classify_severity(output, model=DEFAULT_MODEL):
+    if not USE_AI:
+        return "AI DISABLED"
     try:
         response = client.chat.completions.create(
             model=model,

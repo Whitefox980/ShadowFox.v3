@@ -4,18 +4,13 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from log_to_text import log_to_text
-from tools.auto_add_severity import classify_severity
+from tools.sql_payload_mutator import generate_sql_payloads
+from poc_scripts.log_to_text import log_to_text
+from poc_scripts.auto_add_severity import classify_severity
 from logics.fuzz_ai_trigger import ai_trigger_if_needed
 
 def fuzz_json_body(url):
-    payloads = [
-        {"username": "admin", "password": {"$ne": None}},  # MongoDB
-        {"input": "<script>alert(1)</script>"},
-        {"search": "test'; DROP TABLE users; --"},
-        {"cmd": "whoami"},
-        {"email": "\" onerror=\"alert(1)"},
-    ]
+    payloads = generate_sql_payloads(url)
 
     headers = {
         "User-Agent": "ShadowFox-JSONFuzz",
